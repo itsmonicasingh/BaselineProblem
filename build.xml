@@ -1,0 +1,47 @@
+<?xml version = "1.0" ?>
+<project name="Baseline" default="run" basedir="." >
+    <target name="build" depends="clean">
+        <mkdir dir="out"/>
+        <javac destdir="out">
+            <src path="src;test"/>
+            <classpath location="lib/junit-4.11.jar"/>
+            <classpath location="lib/hamcrest-core-1.3.jar"/>
+        </javac>
+    </target>
+
+
+    <target name="clean" description="clean previous output directory">
+        <delete dir="out"/>
+    </target>
+
+    <target name="runjUnit" depends="build">
+        <junit printsummary="yes" haltonfailure="true" showoutput="true">
+            <classpath>
+                <pathelement location="lib/junit-4.11.jar"/>
+                <pathelement location="lib/hamcrest-core-1.3.jar"/>
+                <pathelement location="out"/>
+            </classpath>
+            <test name="com.tw.baseline" todir="."/>
+        </junit>
+    </target>
+
+    <target name="buildJar" depends="build">
+        <jar destfile="lib/Baseline.jar"
+             basedir="out"
+             excludes="**/*Test*.class">
+            <manifest>
+                <attribute name="Main-Class" value="com.tw.baseline.Receipt"/>
+            </manifest>
+
+        </jar>
+    </target>
+
+    <target name="run" depends="buildJar">
+        <java fork="true" failonerror="true" classname="com.tw.baseline.Receipt">
+            <classpath>
+                <path location="lib/Baseline.jar"/>
+            </classpath>
+        </java>
+    </target>
+
+</project>
